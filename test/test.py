@@ -64,7 +64,8 @@ class TestDistanceMatrixFunctions(unittest.TestCase):
         assert weight1 == 3.2*3.2 + 4.0*2.0
 
 
-from alignfree.neighborjoining import calculateNettoDivergenceList, calculateIntermediateMatrix, mergeGroups
+from alignfree.neighborjoining import calculateNettoDivergenceList, calculateIntermediateMatrix, eraseGroups, \
+    getMergedGroup, calculateNextDistanceMatrix
 
 class TestNJ(unittest.TestCase):
     def setUp(self):
@@ -75,6 +76,8 @@ class TestNJ(unittest.TestCase):
                            [12.0, 11.0, 4.0, 0.0]]
         self.labelList = ['Mensch', 'Maus', 'Rose','Tulpe' ]
         self.labelGroups =  list(map(lambda x : frozenset({x}),  self.labelList))
+        self.erasedLabelGroups = list(map(frozenset, [{'Rose'}, {'Tulpe'} ]))
+
         self.nextLabelGroups = list(map(frozenset, [{'Rose'}, {'Tulpe'} ,{ frozenset({'Mensch'}), frozenset({'Maus'})}]))
         self.firstDivergence = [14.5 , 13.5, 15.5, 13.5]
         self.firstIntermediateMatrix = [[0.0, -25.0, -16.0, -16.0],
@@ -83,6 +86,13 @@ class TestNJ(unittest.TestCase):
                                        [0.0, 0.0, 0.0, 0.0]]
         self.smallestTuple = (0,1)
         self.smallestFirst, self.smallestSec = self.labelGroups[0], self.labelGroups[1]
+        self.firstMergedGroup = frozenset({
+                                            (2.0, frozenset({'Mensch'})) ,
+                                            (1.0, frozenset({'Maus'}))})
+
+        self.nextDistMatrix = [[0.0, 4.0, 12.0],
+                               [4.0, 0.0, 10.0],
+                               [12.0, 10.0, 0.0]]
 
     def test_nettoDivergence(self):
         assert calculateNettoDivergenceList(self.distMatrix) == self.firstDivergence
@@ -90,11 +100,19 @@ class TestNJ(unittest.TestCase):
     def test_intermediateMatrix(self):
         assert calculateIntermediateMatrix(self.distMatrix, self.firstDivergence) == self.smallestTuple
 
-    def test_mergeGroups(self):
-        merged = mergeGroups(self.distMatrix, self.labelGroups, self.smallestTuple)
-        assert merged == self.nextLabelGroups
+    def test_eraseGroups(self):
+        erased = eraseGroups( self.labelGroups, self.smallestTuple)
+        assert erased == self.erasedLabelGroups
 
 
+    def test_getMergedGroup(self):
+        merged = getMergedGroup(self.distMatrix, (self.smallestFirst, self.smallestSec), self.smallestTuple, self.firstDivergence)
+        assert merged == self.firstMergedGroup
+
+
+    def test_calulateNextDistanceMatrix(self):
+        nextDistMatrix = calculateNextDistanceMatrix(self.distMatrix, self.smallestTuple)
+        assert nextDistMatrix == self.nextDistMatrix
 
 if __name__ == '__main__':
     unittest.main()

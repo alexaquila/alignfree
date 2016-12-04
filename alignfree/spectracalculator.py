@@ -57,5 +57,5 @@ def calculateSpectra(sequences, kmerLength):
     labelList = []
     for label, sequence in sequences:
         spectra.append(calculateSpectrum(sequence, kmerLength))
-        labelList.append(label)
+        labelList.append(frozenset({label}))
     return labelList, spectra

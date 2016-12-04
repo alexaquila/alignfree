@@ -30,24 +30,54 @@ def calculateNettoDivergenceList(distanceMatrix):
 
     return nettoDivergenceList
 
+def getMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList):
+    distance = distanceMatrix[minimumTuple[0]][minimumTuple[1]]
+    distance1 = (distance + nettoDivergenceList[minimumTuple[0]] - nettoDivergenceList[minimumTuple[1]] )/2
+    distance2 = (distance + nettoDivergenceList[minimumTuple[1]] - nettoDivergenceList[minimumTuple[0]] )/2
 
-def mergeGroups(distanceMatrix, labelGroups, minimumTuple):
-    index1, index2 = minimumTuple[0], minimumTuple[1]
-    print(minimumTuple)
-    distance = distanceMatrix[index1][index2]
-    distanceElement1 = distance 
-    element1, element2 = labelGroups[index1], labelGroups[index2]
-    newGroup = frozenset({element1, element2})
-    labelGroups.remove(element1)
-    labelGroups.remove(element2)
+    return frozenset({(distance1, minimumElementsAsTuple[0]), (distance2, minimumElementsAsTuple[1])})
 
-    labelGroups.append(newGroup)
+def addMergedGroup(labelGroups, mergedGroup):
+    labelGroups.append(mergedGroup)
     return labelGroups
 
+def eraseGroups(labelGroups, minimumTuple):
+    element1, element2 = labelGroups[minimumTuple[0]], labelGroups[minimumTuple[1]]
+    labelGroups.remove(element1)
+    labelGroups.remove(element2)
+    return labelGroups
 
-def calculateNJ(labelList, distanceMatrix):
-    labelGroups = [frozenset({label}) for label in labelList]
+def calculateNextDistanceMatrix(distanceMatrix, minimumTupel):
+    # Initiate n+1 row and n+1 column
+    n = len(distanceMatrix)
+    for index in range(n):
+        distanceMatrix[index].append(0.0)
+    distanceMatrix.append([0.0]*(n +1))
+
+    distance = distanceMatrix[minimumTupel[0]][minimumTupel[1]]
+    for x in range(n):
+        distanceMatrix[n][x] = distanceMatrix[x][n] = (
+            distanceMatrix[minimumTupel[0]][x] + distanceMatrix[minimumTupel[1]][x] - distance)/2
+
+    assert minimumTupel[0] <minimumTupel[1]
+    del distanceMatrix[minimumTupel[1]]
+    del distanceMatrix[minimumTupel[0]]
+    for x in range(n-1):
+        del distanceMatrix[x][minimumTupel[1]]
+        del distanceMatrix[x][minimumTupel[0]]
+    return distanceMatrix
+
+
+def calculateNJ(labelGroups, distanceMatrix):
+    print(labelGroups)
+   # labelGroups = [frozenset({label}) for label in labelList]
     nettoDivergenceList = calculateNettoDivergenceList(distanceMatrix)
     minimumTuple = calculateIntermediateMatrix(distanceMatrix, nettoDivergenceList)
+    minimumElementsAsTuple = (labelGroups[minimumTuple[0]], labelGroups[minimumTuple[1]])
+    mergedGroup = getMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList)
+    labelGroups = addMergedGroup(labelGroups, mergedGroup)
+    nextLabelGroups = eraseGroups(labelGroups, minimumTuple)
 
-    labelGroups = mergeGroups(distanceMatrix, labelGroups, minimumTuple)
+    nextdistanceMatrix = calculateNextDistanceMatrix(distanceMatrix, minimumTuple)
+
+    return calculateNJ(nextLabelGroups, nextdistanceMatrix )
