@@ -25,12 +25,11 @@ def calculateSim(distanceMatrix, spectra):
     for x in range(numberOfSpectra):
         if x % 10 == 9:
             print('Calculated the distances of ' + str(x+1) + ' of ' + str(numberOfSpectra) + ' specimen.')
-        for y in range(numberOfSpectra):
+        for y in range(x + 1, numberOfSpectra):
             K_X_Y = multiplicationVector(spectra[x], spectra[y])
             K_X_X = magnitude[x]
             K_Y_Y = magnitude[y]
-            distanceMatrix[x][y] =1 - K_X_Y/math.sqrt(K_X_X*K_Y_Y)
-
+            distanceMatrix[x][y] = distanceMatrix[y][x] = 1 - K_X_Y/math.sqrt(K_X_X*K_Y_Y)
 
 def printMatrix(matrix):
     for row in matrix:
