@@ -93,13 +93,7 @@ def getLastMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, net
 
 
 def calculateNJ(labelGroups, distanceMatrix):
-    if len(labelGroups) == 2:
-        distance = distanceMatrix[0][1]
-
-        element1 = labelGroups[0]
-        element2 = labelGroups[1]
-        return getNewickTree(frozenset({(0.0, element1), (distance, element2)}))
-    else:
+    while len(labelGroups) >2:
         # labelGroups = [frozenset({label}) for label in labelList]
         nettoDivergenceList = calculateNettoDivergenceList(distanceMatrix)
         minimumTuple = calculateIntermediateMatrix(distanceMatrix, nettoDivergenceList)
@@ -113,7 +107,8 @@ def calculateNJ(labelGroups, distanceMatrix):
         else:
             minimumElementsAsTuple = (labelGroups[minimumTuple[0]], labelGroups[minimumTuple[1]])
             mergedGroup = getMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList)
-            nextdistanceMatrix = calculateNextDistanceMatrix(distanceMatrix, minimumTuple)
+            distanceMatrix = calculateNextDistanceMatrix(distanceMatrix, minimumTuple)
             labelGroups = addMergedGroup(labelGroups, mergedGroup)
-            nextLabelGroups = eraseGroups(labelGroups, minimumTuple)
-            return calculateNJ(nextLabelGroups, nextdistanceMatrix)
+            labelGroups = eraseGroups(labelGroups, minimumTuple)
+
+            #return calculateNJ(nextLabelGroups, nextdistanceMatrix)
