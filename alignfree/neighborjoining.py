@@ -16,7 +16,7 @@ def calculateIntermediateMatrix(distanceMatrix, nettoDivergenceList):
 
 def nettoDivergence(rowOfDistances):
     n = len(rowOfDistances)
-    assert n > 3
+    assert n > 2
     sum = 0.0
     for distance in rowOfDistances:
         sum += distance
@@ -30,16 +30,19 @@ def calculateNettoDivergenceList(distanceMatrix):
 
     return nettoDivergenceList
 
+
 def getMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList):
     distance = distanceMatrix[minimumTuple[0]][minimumTuple[1]]
-    distance1 = (distance + nettoDivergenceList[minimumTuple[0]] - nettoDivergenceList[minimumTuple[1]] )/2
-    distance2 = (distance + nettoDivergenceList[minimumTuple[1]] - nettoDivergenceList[minimumTuple[0]] )/2
+    distance1 = (distance + nettoDivergenceList[minimumTuple[0]] - nettoDivergenceList[minimumTuple[1]]) / 2
+    distance2 = (distance + nettoDivergenceList[minimumTuple[1]] - nettoDivergenceList[minimumTuple[0]]) / 2
 
     return frozenset({(distance1, minimumElementsAsTuple[0]), (distance2, minimumElementsAsTuple[1])})
+
 
 def addMergedGroup(labelGroups, mergedGroup):
     labelGroups.append(mergedGroup)
     return labelGroups
+
 
 def eraseGroups(labelGroups, minimumTuple):
     element1, element2 = labelGroups[minimumTuple[0]], labelGroups[minimumTuple[1]]
@@ -47,37 +50,70 @@ def eraseGroups(labelGroups, minimumTuple):
     labelGroups.remove(element2)
     return labelGroups
 
+
 def calculateNextDistanceMatrix(distanceMatrix, minimumTupel):
     # Initiate n+1 row and n+1 column
     n = len(distanceMatrix)
     for index in range(n):
         distanceMatrix[index].append(0.0)
-    distanceMatrix.append([0.0]*(n +1))
+    distanceMatrix.append([0.0] * (n + 1))
 
     distance = distanceMatrix[minimumTupel[0]][minimumTupel[1]]
     for x in range(n):
         distanceMatrix[n][x] = distanceMatrix[x][n] = (
-            distanceMatrix[minimumTupel[0]][x] + distanceMatrix[minimumTupel[1]][x] - distance)/2
+                                                          distanceMatrix[minimumTupel[0]][x] +
+                                                          distanceMatrix[minimumTupel[1]][x] - distance) / 2
 
-    assert minimumTupel[0] <minimumTupel[1]
+    assert minimumTupel[0] < minimumTupel[1]
     del distanceMatrix[minimumTupel[1]]
     del distanceMatrix[minimumTupel[0]]
-    for x in range(n-1):
+    for x in range(n - 1):
         del distanceMatrix[x][minimumTupel[1]]
         del distanceMatrix[x][minimumTupel[0]]
     return distanceMatrix
 
+def getNewickTree(treeOfSets):
+    string = ''
+    for element in treeOfSets:
+        if type(element) == tuple:
+            string += getNewickTree(element[1]) + ':' + str(element[0]) + ', '
+        elif type(element) == str:
+            return element
+    string = '(' + string[0:-2] + ')'
+    return string
 
-def calculateNJ(labelGroups, distanceMatrix):
-    print(labelGroups)
-   # labelGroups = [frozenset({label}) for label in labelList]
-    nettoDivergenceList = calculateNettoDivergenceList(distanceMatrix)
-    minimumTuple = calculateIntermediateMatrix(distanceMatrix, nettoDivergenceList)
-    minimumElementsAsTuple = (labelGroups[minimumTuple[0]], labelGroups[minimumTuple[1]])
-    mergedGroup = getMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList)
-    labelGroups = addMergedGroup(labelGroups, mergedGroup)
-    nextLabelGroups = eraseGroups(labelGroups, minimumTuple)
+def getLastMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList):
+    distance = distanceMatrix[minimumTuple[0]][minimumTuple[1]]
+    distance1 = (distance + nettoDivergenceList[minimumTuple[0]] - nettoDivergenceList[minimumTuple[1]]) / 2
+    distance2 = (distance + nettoDivergenceList[minimumTuple[1]] - nettoDivergenceList[minimumTuple[0]]) / 2
 
     nextdistanceMatrix = calculateNextDistanceMatrix(distanceMatrix, minimumTuple)
+    distance3 = nextdistanceMatrix[0][1]
+    return frozenset({(distance1, minimumElementsAsTuple[0]), (distance2, minimumElementsAsTuple[1]), (distance3, minimumElementsAsTuple[2])})
 
-    return calculateNJ(nextLabelGroups, nextdistanceMatrix )
+
+def calculateNJ(labelGroups, distanceMatrix):
+    if len(labelGroups) == 2:
+        distance = distanceMatrix[0][1]
+
+        element1 = labelGroups[0]
+        element2 = labelGroups[1]
+        return getNewickTree(frozenset({(0.0, element1), (distance, element2)}))
+    else:
+        # labelGroups = [frozenset({label}) for label in labelList]
+        nettoDivergenceList = calculateNettoDivergenceList(distanceMatrix)
+        minimumTuple = calculateIntermediateMatrix(distanceMatrix, nettoDivergenceList)
+
+
+        if len(labelGroups) == 3:
+            index = list({0,1, 2}.difference({minimumTuple[0], minimumTuple[1]}))[0]
+            minimumElementsAsTuple = (labelGroups[minimumTuple[0]], labelGroups[minimumTuple[1]], labelGroups[index])
+            mergedGroup = getLastMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList)
+            return getNewickTree(mergedGroup)
+        else:
+            minimumElementsAsTuple = (labelGroups[minimumTuple[0]], labelGroups[minimumTuple[1]])
+            mergedGroup = getMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList)
+            nextdistanceMatrix = calculateNextDistanceMatrix(distanceMatrix, minimumTuple)
+            labelGroups = addMergedGroup(labelGroups, mergedGroup)
+            nextLabelGroups = eraseGroups(labelGroups, minimumTuple)
+            return calculateNJ(nextLabelGroups, nextdistanceMatrix)

@@ -6,6 +6,7 @@ from alignfree.neighborjoining import calculateNJ
 
 def main():
     filePath = 'nym.fas'
+    targetPath ='nym.tree'
     kmerLength = 5
 
 
@@ -16,7 +17,10 @@ def main():
 
     distanceMatrix = getDistanceMatrix(spectra)
 
-    calculateNJ(labelList, distanceMatrix)
+    newickString = calculateNJ(labelList, distanceMatrix) + ';'
+
+    targetFile = open(targetPath, 'w')
+    targetFile.write(newickString)
 
 if __name__ == '__main__':
     main()

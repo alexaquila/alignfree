@@ -1,6 +1,6 @@
 import unittest
 
-from alignfree.fastafileopener import validateSequence
+from alignfree.fastafileopener import validateSequence, validateLabel
 
 
 class TestParserFunctions(unittest.TestCase):
@@ -8,16 +8,23 @@ class TestParserFunctions(unittest.TestCase):
         self.failfasta = ('name', 'ATCGA/ATCGAacgtnyrmwskhvdb')
         self.goodfasta = ('name', 'ATCGAacgtnyrmwskhvdb')
 
+        self.wrongLabel =   'qwert(ert._[:_/,  ,,-)'
+        self.correctLabel = 'qwert_ert.____/_____-_'
+
     def test_failWhenUnknownCharacter(self):
         self.assertRaises(ValueError, self.unknownCharacter)
 
     def unknownCharacter(self):
         validateSequence(self.failfasta[1])
+
     def test_doNotFailWithKnownCharacters(self):
         try:
             validateSequence(self.goodfasta[1])
         except ValueError:
             self.fail('Raising ValueError for no reason')
+
+    def test_validateLabel(self):
+        assert validateLabel(self.wrongLabel) == self.correctLabel
 
 from alignfree.spectracalculator import getMultiples, getReplacement, shrinkMultipleKmers
 
@@ -65,7 +72,7 @@ class TestDistanceMatrixFunctions(unittest.TestCase):
 
 
 from alignfree.neighborjoining import calculateNettoDivergenceList, calculateIntermediateMatrix, eraseGroups, \
-    getMergedGroup, calculateNextDistanceMatrix
+    getMergedGroup, calculateNextDistanceMatrix, calculateNJ
 
 class TestNJ(unittest.TestCase):
     def setUp(self):
@@ -94,6 +101,8 @@ class TestNJ(unittest.TestCase):
                                [4.0, 0.0, 10.0],
                                [12.0, 10.0, 0.0]]
 
+        self.newickFormatTree ="(Tulpe:1.0, Rose:3.0, (Mensch:2.0, Maus:1.0):9.0 )"
+
     def test_nettoDivergence(self):
         assert calculateNettoDivergenceList(self.distMatrix) == self.firstDivergence
 
@@ -113,6 +122,12 @@ class TestNJ(unittest.TestCase):
     def test_calulateNextDistanceMatrix(self):
         nextDistMatrix = calculateNextDistanceMatrix(self.distMatrix, self.smallestTuple)
         assert nextDistMatrix == self.nextDistMatrix
+
+    def test_calulateNJ(self):
+        newick = calculateNJ(self.labelGroups, self.distMatrix)
+        print(newick)
+
+
 
 if __name__ == '__main__':
     unittest.main()
