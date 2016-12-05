@@ -76,10 +76,13 @@ def getNewickTree(treeOfSets):
     string = ''
     for element in treeOfSets:
         if type(element) == tuple:
-            string += getNewickTree(element[1]) + ':' + str(element[0]) + ', '
+            string += getNewickTree(element[1]) + ':' + str(element[0]) + ','
         elif type(element) == str:
             return element
-    string = '(' + string[0:-2] + ')'
+    if string[-1] == ',':
+        string = '(' + string[0:-1] + ')'
+    else:
+        string = '(' + string + ')'
     return string
 
 def getLastMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList):
