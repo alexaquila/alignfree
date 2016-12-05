@@ -10,9 +10,7 @@ def multiplicationVector(X, Y):
             x += 1
         while y < len(Y) and Y[y][0] < X[x][0]:
             y += 1
-        while y < len(Y)  and x < len(X) and  Y[y][0] == X[x][0]:
-          #  print(X[x][1])
-         #   print(Y[y][1])
+        while y < len(Y)  and x < len(X) and Y[y][0] == X[x][0]:
             weight += X[x][1] * Y[y][1]
             x += 1
             y += 1
@@ -25,6 +23,8 @@ def calculateSim(distanceMatrix, spectra):
     for spectrum in spectra:
         magnitude.append(multiplicationVector(spectrum, spectrum))
     for x in range(numberOfSpectra):
+        if x % 10 == 0:
+            print('Calculated the distances of ' + str(x) + ' of ' + str(numberOfSpectra) + ' specimen.')
         for y in range(numberOfSpectra):
             K_X_Y = multiplicationVector(spectra[x], spectra[y])
             K_X_X = magnitude[x]
