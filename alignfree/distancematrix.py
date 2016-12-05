@@ -8,7 +8,7 @@ def multiplicationVector(X, Y):
     while x < len(X) and  y < len(Y):
         while x < len(X) and X[x][0] < Y[y][0]:
             x += 1
-        while y < len(Y) and Y[y][0] < X[x][0]:
+        while y < len(Y) and x < len(X) and Y[y][0] < X[x][0]:
             y += 1
         while y < len(Y)  and x < len(X) and Y[y][0] == X[x][0]:
             weight += X[x][1] * Y[y][1]
