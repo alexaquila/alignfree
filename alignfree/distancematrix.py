@@ -23,8 +23,8 @@ def calculateSim(distanceMatrix, spectra):
     for spectrum in spectra:
         magnitude.append(multiplicationVector(spectrum, spectrum))
     for x in range(numberOfSpectra):
-        if x % 10 == 0:
-            print('Calculated the distances of ' + str(x) + ' of ' + str(numberOfSpectra) + ' specimen.')
+        if x % 10 == 9:
+            print('Calculated the distances of ' + str(x+1) + ' of ' + str(numberOfSpectra) + ' specimen.')
         for y in range(numberOfSpectra):
             K_X_Y = multiplicationVector(spectra[x], spectra[y])
             K_X_X = magnitude[x]

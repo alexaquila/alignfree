@@ -93,11 +93,13 @@ def getLastMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, net
 
 
 def calculateNJ(labelGroups, distanceMatrix):
-    while len(labelGroups) >2:
+    itemNumber = len(labelGroups)
+    currentItemNumber = len(labelGroups)
+    while currentItemNumber > 2:
+
         # labelGroups = [frozenset({label}) for label in labelList]
         nettoDivergenceList = calculateNettoDivergenceList(distanceMatrix)
         minimumTuple = calculateIntermediateMatrix(distanceMatrix, nettoDivergenceList)
-
 
         if len(labelGroups) == 3:
             index = list({0,1, 2}.difference({minimumTuple[0], minimumTuple[1]}))[0]
@@ -112,3 +114,6 @@ def calculateNJ(labelGroups, distanceMatrix):
             labelGroups = eraseGroups(labelGroups, minimumTuple)
 
             #return calculateNJ(nextLabelGroups, nextdistanceMatrix)
+            currentItemNumber = len(labelGroups)
+            if currentItemNumber % 10 == 9:
+                print(str(currentItemNumber+1) + ' of ' + str(itemNumber))
