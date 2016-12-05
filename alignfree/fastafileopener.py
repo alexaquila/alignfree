@@ -17,7 +17,7 @@ def validateSequence(sequence):
 def parseFasta(fastaFile):
     sequences = []
     currentSequence, currentLabel = '', ''
-    for line in  fastaFile:
+    for line in fastaFile:
         stripedLine = line.strip()
         # If it begins with a '>', accept line as the label
         if stripedLine.startswith('>'):

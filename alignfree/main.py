@@ -5,18 +5,20 @@ from alignfree.neighborjoining import calculateNJ
 
 
 def main():
-    filePath = 'nym.fas'
-    targetPath ='nym.tree'
+    filePath = 'all.fas'
+    targetPath ='all.tree'
     kmerLength = 5
 
-
+    print('Open Fasta File')
     fastaFile = open(filePath, 'r')
     sequences = parseFasta(fastaFile)
-
+    print('Calculate Spectra')
     labelList, spectra = calculateSpectra(sequences, kmerLength)
 
+    print('Get distance-matrix')
     distanceMatrix = getDistanceMatrix(spectra)
 
+    print('Calculate NJ')
     newickString = calculateNJ(labelList, distanceMatrix) + ';'
 
     targetFile = open(targetPath, 'w')

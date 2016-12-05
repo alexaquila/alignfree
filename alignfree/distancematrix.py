@@ -6,7 +6,7 @@ def multiplicationVector(X, Y):
     weight = 0.0
 
     while x < len(X) and  y < len(Y):
-        while y < len(Y) and X[x][0] < Y[y][0]:
+        while x < len(X) and X[x][0] < Y[y][0]:
             x += 1
         while y < len(Y) and Y[y][0] < X[x][0]:
             y += 1
@@ -29,7 +29,7 @@ def calculateSim(distanceMatrix, spectra):
             K_X_Y = multiplicationVector(spectra[x], spectra[y])
             K_X_X = magnitude[x]
             K_Y_Y = magnitude[y]
-            distanceMatrix[x][y] =1- K_X_Y/math.sqrt(K_X_X*K_Y_Y)
+            distanceMatrix[x][y] =1 - K_X_Y/math.sqrt(K_X_X*K_Y_Y)
 
 
 def printMatrix(matrix):
