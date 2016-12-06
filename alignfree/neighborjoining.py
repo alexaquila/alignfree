@@ -84,7 +84,8 @@ def getNewickTree(treeOfSets):
         string = '  (  ' + string[0:-1] + '  )  '
     else:
         string = '  (  ' + string + '  )  '
-    count = count + 2
+    global  count
+    count = count + 1
 
     return string
 
@@ -124,4 +125,4 @@ def calculateNJ(labelGroups, distanceMatrix):
             #return calculateNJ(nextLabelGroups, nextdistanceMatrix)
             currentItemNumber = len(labelGroups)
             if currentItemNumber % 10 == 9:
-                print(str(currentItemNumber+1) + ' of ' + str(itemNumber))
+                print(str(itemNumber - currentItemNumber+1) + ' of ' + str(itemNumber))

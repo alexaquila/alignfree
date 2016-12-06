@@ -5,8 +5,8 @@ from alignfree.neighborjoining import calculateNJ
 
 
 def main():
-    filePath = 'all.fas'
-    targetPath ='all.tree'
+    filePath = 'nym.fas'
+    targetPath ='nym.tre'
     kmerLength = 5
 
     print('Open Fasta File')
