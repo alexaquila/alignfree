@@ -5,8 +5,8 @@ from alignfree.neighborjoining import calculateNJ
 
 
 def main():
-    filePath = 'nym.fas'
-    targetPath ='nym.tre'
+    filePath = 'GBOL-Spinnentiere.fasta'
+    targetPath ='GBOL-Spinnentiere.tre'
     kmerLength = 5
 
     print('Open Fasta File')
@@ -19,7 +19,7 @@ def main():
     distanceMatrix = getDistanceMatrix(spectra)
 
     print('Calculate NJ')
-    newickString = calculateNJ(labelList, distanceMatrix) + ';'
+    newickString = '(' + calculateNJ(labelList, distanceMatrix) + ');'
 
     targetFile = open(targetPath, 'w')
     targetFile.write(newickString)

@@ -2,7 +2,6 @@ def validateLabel(label):
     unAllowedCharacters = {' ', ':', ';', '(', ')', '[', ']', ','}
     for index, char in enumerate(label):
         if char in unAllowedCharacters:
-            #print('Illegal character in label which conflicts with newick format, changing to underscore')
             label = label[0:index] + '_' + label[index+1:]
     return label
 
@@ -24,7 +23,7 @@ def parseFasta(fastaFile):
             # Write previous label and sequence to sequences
             if not currentSequence == '':
                 validatedSequence = validateSequence(currentSequence)
-                sequences.append((currentLabel, validatedSequence))
+                sequences.append((validatedLabel, validatedSequence))
                 currentSequence = ''
             # Get new label
             currentLabel = stripedLine[1:-1]

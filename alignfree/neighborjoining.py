@@ -72,7 +72,6 @@ def calculateNextDistanceMatrix(distanceMatrix, minimumTupel):
         del distanceMatrix[x][minimumTupel[0]]
     return distanceMatrix
 
-count = 0
 def getNewickTree(treeOfSets):
     string = ''
     for element in treeOfSets:
@@ -81,12 +80,9 @@ def getNewickTree(treeOfSets):
         elif type(element) == str:
             return element
     if string[-1] == ',':
-        string = '  (  ' + string[0:-1] + '  )  '
+        string = '(' + string[0:-1] + ')'
     else:
-        string = '  (  ' + string + '  )  '
-    global  count
-    count = count + 1
-
+        string = '(' + string + ')'
     return string
 
 def getLastMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList):
@@ -112,9 +108,7 @@ def calculateNJ(labelGroups, distanceMatrix):
             index = list({0,1, 2}.difference({minimumTuple[0], minimumTuple[1]}))[0]
             minimumElementsAsTuple = (labelGroups[minimumTuple[0]], labelGroups[minimumTuple[1]], labelGroups[index])
             mergedGroup = getLastMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList)
-            tree = getNewickTree(mergedGroup)
-            print(count)
-            return tree
+            return getNewickTree(mergedGroup)
         else:
             minimumElementsAsTuple = (labelGroups[minimumTuple[0]], labelGroups[minimumTuple[1]])
             mergedGroup = getMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList)
