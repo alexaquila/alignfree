@@ -72,6 +72,7 @@ def calculateNextDistanceMatrix(distanceMatrix, minimumTupel):
         del distanceMatrix[x][minimumTupel[0]]
     return distanceMatrix
 
+count = 0
 def getNewickTree(treeOfSets):
     string = ''
     for element in treeOfSets:
@@ -80,9 +81,11 @@ def getNewickTree(treeOfSets):
         elif type(element) == str:
             return element
     if string[-1] == ',':
-        string = '(' + string[0:-1] + ')'
+        string = '  (  ' + string[0:-1] + '  )  '
     else:
-        string = '(' + string + ')'
+        string = '  (  ' + string + '  )  '
+    count + 2
+    print(count)
     return string
 
 def getLastMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList):
