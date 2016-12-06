@@ -84,8 +84,8 @@ def getNewickTree(treeOfSets):
         string = '  (  ' + string[0:-1] + '  )  '
     else:
         string = '  (  ' + string + '  )  '
-    count + 2
-    print(count)
+    count = count + 2
+
     return string
 
 def getLastMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList):
@@ -111,7 +111,9 @@ def calculateNJ(labelGroups, distanceMatrix):
             index = list({0,1, 2}.difference({minimumTuple[0], minimumTuple[1]}))[0]
             minimumElementsAsTuple = (labelGroups[minimumTuple[0]], labelGroups[minimumTuple[1]], labelGroups[index])
             mergedGroup = getLastMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList)
-            return getNewickTree(mergedGroup)
+            tree = getNewickTree(mergedGroup)
+            print(count)
+            return tree
         else:
             minimumElementsAsTuple = (labelGroups[minimumTuple[0]], labelGroups[minimumTuple[1]])
             mergedGroup = getMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList)
