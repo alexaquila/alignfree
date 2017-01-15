@@ -1,16 +1,21 @@
+import sys
+
 from alignfree.fastafileopener import parseFasta
 from alignfree.spectracalculator import calculateSpectra
 from alignfree.distancematrix import getDistanceMatrix
 from alignfree.neighborjoining import calculateNJ
-
+from alignfree.userinterface import (
+    getFastaFromUserInput,
+    getKmerLength,
+    getTargetPath,
+    getParameter
+)
 
 def main():
-    filePath = 'GBOL-Spinnentiere.fasta'
-    targetPath ='GBOL-Spinnentiere.tre'
-    kmerLength = 5
+
+    fastaFile, targetPath, kmerLength = getParameter(sys.argv)
 
     print('Open Fasta File')
-    fastaFile = open(filePath, 'r')
     sequences = parseFasta(fastaFile)
     print('Calculate Spectra')
     labelList, spectra = calculateSpectra(sequences, kmerLength)
