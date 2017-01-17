@@ -5,9 +5,6 @@ from alignfree.spectracalculator import calculateSpectra
 from alignfree.distancematrix import getDistanceMatrix
 from alignfree.neighborjoining import calculateNJ
 from alignfree.userinterface import (
-    getFastaFromUserInput,
-    getKmerLength,
-    getTargetPath,
     getParameter
 )
 
@@ -24,7 +21,7 @@ def main():
     distanceMatrix = getDistanceMatrix(spectra)
 
     print('Calculate NJ')
-    newickString = '(' + calculateNJ(labelList, distanceMatrix) + ');'
+    newickString = calculateNJ(labelList, distanceMatrix) + ';'
 
     targetFile = open(targetPath, 'w')
     targetFile.write(newickString)

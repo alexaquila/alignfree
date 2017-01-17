@@ -1,6 +1,5 @@
 import math
 
-
 def multiplicationVector(X, Y):
     x, y = 0, 0
     weight = 0.0

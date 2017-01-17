@@ -1,6 +1,3 @@
-import math
-
-
 def calculateIntermediateMatrix(distanceMatrix, nettoDivergenceList):
     n = len(nettoDivergenceList)
     # M = [[0.0 for x in range(n)] for y in range(n)]
@@ -22,7 +19,6 @@ def nettoDivergence(rowOfDistances):
         sum += distance
     return sum / (n - 2)
 
-
 def calculateNettoDivergenceList(distanceMatrix):
     nettoDivergenceList = []
     for rowOfDistances in distanceMatrix:
@@ -30,14 +26,12 @@ def calculateNettoDivergenceList(distanceMatrix):
 
     return nettoDivergenceList
 
-
 def getMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, nettoDivergenceList):
     distance = distanceMatrix[minimumTuple[0]][minimumTuple[1]]
     distance1 = (distance + nettoDivergenceList[minimumTuple[0]] - nettoDivergenceList[minimumTuple[1]]) / 2
     distance2 = (distance + nettoDivergenceList[minimumTuple[1]] - nettoDivergenceList[minimumTuple[0]]) / 2
 
     return frozenset({(distance1, minimumElementsAsTuple[0]), (distance2, minimumElementsAsTuple[1])})
-
 
 def addMergedGroup(labelGroups, mergedGroup):
     labelGroups.append(mergedGroup)
@@ -93,7 +87,6 @@ def getLastMergedGroup(distanceMatrix, minimumElementsAsTuple, minimumTuple, net
     nextdistanceMatrix = calculateNextDistanceMatrix(distanceMatrix, minimumTuple)
     distance3 = nextdistanceMatrix[0][1]
     return frozenset({(distance1, minimumElementsAsTuple[0]), (distance2, minimumElementsAsTuple[1]), (distance3, minimumElementsAsTuple[2])})
-
 
 def calculateNJ(labelGroups, distanceMatrix):
     itemNumber = len(labelGroups)

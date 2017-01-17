@@ -23,10 +23,11 @@ def parseFasta(fastaFile):
             # Write previous label and sequence to sequences
             if not currentSequence == '':
                 validatedSequence = validateSequence(currentSequence)
+                print(validatedLabel)
                 sequences.append((validatedLabel, validatedSequence))
                 currentSequence = ''
             # Get new label
-            currentLabel = stripedLine[1:-1]
+            currentLabel = stripedLine[1:]
             validatedLabel = validateLabel(currentLabel)
         elif stripedLine.startswith (';'):
             continue
