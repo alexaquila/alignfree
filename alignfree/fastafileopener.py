@@ -6,11 +6,13 @@ def validateLabel(label):
     return label
 
 def validateSequence(sequence):
-    allowedCharacters = {'a','c','g','t','n','y','r','m','w','s','k','h','v','d','b'}
+    allowedCharacters = {'a','c','g','t','n','y','r','m','w','s','k','h','v','d','b','-'}
     sequence = sequence.lower()
-    for base in sequence:
+    for index, base in enumerate(sequence):
         if not base in allowedCharacters:
             raise ValueError("Illegal character in sequence: " + base)
+        if base == '-':
+            sequence = sequence[0:index] + 'n' + sequence[index+1:]
     return sequence
 
 def parseFasta(fastaFile):

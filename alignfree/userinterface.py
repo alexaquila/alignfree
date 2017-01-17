@@ -29,7 +29,6 @@ def getParameterFromArgs(args):
               )
         raise SystemExit
 
-
 def getFastaFromUserInput():
     filePath = None
     fastaFile = None
@@ -57,10 +56,12 @@ def getKmerLength():
     kmerLength = 0
     while kmerLength < MIN_LENGTH or kmerLength > MAX_LENGTH:
         try:
-            kmerLenth = int(raw_input('Please enter the kmer-length to the fasta file: '))
+            kmerLength = int(raw_input('Please enter the desired kmer-length: '))
+            if kmerLength < MIN_LENGTH or kmerLength > MAX_LENGTH:
+                raise Exception
         except Exception:
-            kmerLenth = None
-            print('Please enter a number between '+
+            kmerLength = None
+            print('Please enter a number between ' +
                   str(MIN_LENGTH) + ' and ' +
                   str(MAX_LENGTH))
     return kmerLength
