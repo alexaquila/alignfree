@@ -12,7 +12,7 @@ def validateSequence(sequence):
         if not base in allowedCharacters:
             raise ValueError("Illegal character in sequence: " + base)
         if base == '-':
-            sequence = sequence[0:index] + 'n' + sequence[index+1:]
+            sequence = sequence[0:index] + sequence[index+1:]
     return sequence
 
 def parseFasta(fastaFile):
