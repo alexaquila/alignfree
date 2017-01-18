@@ -34,6 +34,22 @@ def printMatrix(matrix):
     for row in matrix:
         print(row)
 
+
+def formatRow(row):
+    if not row ==[]:
+        outputString =str(row[0])
+        for element in row[1:]:
+            outputString += ',' + str(element)
+        return outputString
+    else:
+        return ''
+
+def getStringFromMatrix(matrix,labelList):
+    outputString = formatRow(labelList)
+    for row in matrix:
+        outputString += '\n' + formatRow(row)
+    return outputString
+
 def getDistanceMatrix(spectra):
     numberOfSpectra = len(spectra)
     distanceMatrix =[[0.0 for x in range(numberOfSpectra) ] for y in range(numberOfSpectra)]

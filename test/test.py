@@ -56,12 +56,22 @@ class TestSpectraFunctions(unittest.TestCase):
         assert shrinkMultipleKmers(self.spectrumToReduce) == self.spectrumReduced
 
 
-from alignfree.distancematrix import getDistanceMatrix, multiplicationVector
+from alignfree.distancematrix import getDistanceMatrix, multiplicationVector, getStringFromMatrix
 
 class TestDistanceMatrixFunctions(unittest.TestCase):
     def setUp(self):
         self.spectraReduced1 = [('aaa', 3.2), ('aat', 1.0), ('ttt', 4.0)]
         self.spectraReduced2 = [('aaa', 3.2), ('act', 1.0),('aga', 1.0), ('ttt', 2.0)]
+        self.distMatrix = [[0.0, 3.0, 14.0, 12.0],
+                           [3.0, 0.0, 13.0, 11.0],
+                           [14.0, 13.0, 0.0, 4.0],
+                           [12.0, 11.0, 4.0, 0.0]]
+        self.labelList = ['Mensch', 'Maus', 'Rose','Tulpe' ]
+        self.csvString = 'Mensch,Maus,Rose,Tulpe\n' \
+                         '0.0,3.0,14.0,12.0\n' \
+                         '3.0,0.0,13.0,11.0\n' \
+                         '14.0,13.0,0.0,4.0\n' \
+                         '12.0,11.0,4.0,0.0'
 
     def test_multilpication(self):
         weight1 = multiplicationVector(self.spectraReduced1, self.spectraReduced2)
@@ -70,6 +80,12 @@ class TestDistanceMatrixFunctions(unittest.TestCase):
         assert weight1 == weight2
         assert weight1 == 3.2*3.2 + 4.0*2.0
 
+    def test_csvparse(self):
+       # print('I\n')
+       # print(getStringFromMatrix(self.distMatrix, self.labelList))
+       # print('II\n')
+       # print(self.csvString)
+        assert getStringFromMatrix(self.distMatrix, self.labelList) == self.csvString
 
 from alignfree.neighborjoining import calculateNettoDivergenceList, calculateIntermediateMatrix, eraseGroups, \
     getMergedGroup, calculateNextDistanceMatrix, calculateNJ
