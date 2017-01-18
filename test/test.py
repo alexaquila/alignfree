@@ -141,7 +141,7 @@ class TestNJ(unittest.TestCase):
 
     def test_calulateNJ(self):
         newick = calculateNJ(self.labelGroups, self.distMatrix)
-        print(newick)
+        # print(newick)
 
 
 

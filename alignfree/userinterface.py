@@ -50,7 +50,7 @@ def getTargetPath():
         except IOError:
             filePath = None
             print('Please enter a valid filepath.')
-    return filePath + '.tre'
+    return filePath
 
 def getKmerLength():
     kmerLength = 0
