@@ -44,10 +44,20 @@ def formatRow(row):
     else:
         return ''
 
-def getStringFromMatrix(matrix,labelList):
+def getMatrixStringFromMatrix(matrix, labelList):
     outputString = formatRow(labelList)
     for row in matrix:
         outputString += '\n' + formatRow(row)
+    return outputString
+
+def getColumnStringFromMatrix(matrix, labelList):
+    outputString = ''
+    n = len(matrix)
+    for row in range(0,n-1):
+        for column in range(row+1, n):
+            outputString += labelList[row] + ','
+            outputString += labelList[column] + ','
+            outputString += str(matrix[row][column]) + '\n'
     return outputString
 
 def getDistanceMatrix(spectra):

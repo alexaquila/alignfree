@@ -2,7 +2,7 @@ import sys
 
 from alignfree.fastafileopener import parseFasta
 from alignfree.spectracalculator import calculateSpectra
-from alignfree.distancematrix import getDistanceMatrix, getStringFromMatrix
+from alignfree.distancematrix import getDistanceMatrix, getMatrixStringFromMatrix, getColumnStringFromMatrix
 from alignfree.neighborjoining import calculateNJ
 from alignfree.userinterface import getParameter
 
@@ -18,7 +18,7 @@ def main():
     print('Get distance-matrix')
     distanceMatrix = getDistanceMatrix(spectra)
 
-    csvString = getStringFromMatrix(distanceMatrix, labelList)
+    csvString = getColumnStringFromMatrix(distanceMatrix, labelList)
     print('Calculate NJ')
     newickString = calculateNJ([frozenset({label}) for label in labelList], distanceMatrix) + ';'
 
